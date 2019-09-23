@@ -38,6 +38,11 @@ public class RequestDataExtractor {
         return HttpMethod.resolve(request.getMethod());
     }
 
+    /**
+     * 提取URL
+     * @param request
+     * @return
+     */
     public String extractUri(HttpServletRequest request) {
         return request.getRequestURI() + getQuery(request);
     }

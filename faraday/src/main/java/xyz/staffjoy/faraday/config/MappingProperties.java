@@ -9,6 +9,9 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE;
 
+/**
+ * 路由映射表
+ */
 public class MappingProperties {
     /**
      * Name of the mapping

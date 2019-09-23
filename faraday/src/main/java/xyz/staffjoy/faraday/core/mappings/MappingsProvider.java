@@ -51,14 +51,34 @@ public abstract class MappingsProvider {
 
     @PostConstruct
     protected synchronized void updateMappings() {
+        /*
+        生成路由映射表
+         */
         List<MappingProperties> newMappings = retrieveMappings();
+        /*
+        校验路由映射表
+         */
         mappingsValidator.validate(newMappings);
+        /*
+        保存校验路由映射表
+         */
         mappings = newMappings;
+        /*
+        更新HttpClient映射表
+        HttpClient映射表 是通过 路由映射表 计算出来的
+        更新 路由映射表 时候 也要更新 HttpClient映射表
+         */
         httpClientProvider.updateHttpClients(mappings);
+
         log.info("Destination mappings updated", mappings);
     }
 
+    /*
+    应不应该更新 路由映射表
+     */
     protected abstract boolean shouldUpdateMappings(HttpServletRequest request);
-
+    /*
+    获取 新的 路由映射表
+     */
     protected abstract List<MappingProperties> retrieveMappings();
 }

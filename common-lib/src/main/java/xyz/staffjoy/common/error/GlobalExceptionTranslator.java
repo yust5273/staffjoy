@@ -148,6 +148,11 @@ public class GlobalExceptionTranslator {
                 .build();
     }
 
+    /**
+     * 搂底的异常处理
+     * @param e
+     * @return
+     */
     @ExceptionHandler(Throwable.class)
     public BaseResponse handleError(Throwable e) {
         logger.error("Internal Server Error", e);

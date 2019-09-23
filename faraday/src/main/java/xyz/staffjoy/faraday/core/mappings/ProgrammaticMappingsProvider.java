@@ -33,6 +33,9 @@ public class ProgrammaticMappingsProvider extends MappingsProvider {
         return false;
     }
 
+    /*
+    基于编程的方式去构建映射
+     */
     @Override
     protected List<MappingProperties> retrieveMappings() {
         List<MappingProperties> mappings = new ArrayList<>();

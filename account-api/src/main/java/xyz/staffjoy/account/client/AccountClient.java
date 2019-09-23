@@ -14,6 +14,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @FeignClient： 表示扫描并自动生成强类型的客户端
+ */
 @FeignClient(name = AccountConstant.SERVICE_NAME, path = "/v1/account", url = "${staffjoy.account-service-endpoint}")
 // TODO Client side validation can be enabled as needed
 // @Validated

@@ -24,7 +24,9 @@ import java.util.List;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
-
+/*
+OncePerRequestFilter 每个请求处理一下次 filter
+ */
 public class ReverseProxyFilter extends OncePerRequestFilter {
 
     protected static final String X_FORWARDED_FOR_HEADER = "X-Forwarded-For";

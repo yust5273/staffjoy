@@ -22,11 +22,17 @@ public class ConfigurationMappingsProvider extends MappingsProvider {
     }
 
 
+    /*
+    采用静态配置不需要更新 路由映射
+     */
     @Override
     protected boolean shouldUpdateMappings(HttpServletRequest request) {
         return false;
     }
 
+    /*
+    基于静态配置的路由映射
+     */
     @Override
     protected List<MappingProperties> retrieveMappings() {
         return faradayProperties.getMappings().stream()
