@@ -68,8 +68,13 @@ public class RequestForwarder {
         ResponseData response = sendRequest(traceId, request, mapping, destination.getMappingMetricsName(), data);
 
         log.debug(String.format("Forwarded: %s %s %s -> %s %d", data.getMethod(), data.getHost(), data.getUri(), destination.getUri(), response.getStatus().value()));
-
+        /*
+        打调用链日志
+         */
         traceInterceptor.onForwardComplete(traceId, response.getStatus(), response.getBody(), response.getHeaders());
+        /*
+        响应截获器
+         */
         postForwardResponseInterceptor.intercept(response, mapping);
         prepareForwardedResponseHeaders(response);
 
@@ -124,6 +129,9 @@ public class RequestForwarder {
         ResponseEntity<byte[]> response;
         long startingTime = nanoTime();
         try {
+            /*
+            查询httpclient映射表，找到对应的restTemplate，去（exchange就是转发的动作）发送请求
+             */
             response = httpClientProvider.getHttpClient(mapping.getName()).exchange(request, byte[].class);
             recordLatency(mappingMetricsName, startingTime);
         } catch (HttpStatusCodeException e) {

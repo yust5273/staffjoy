@@ -59,6 +59,9 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         this.preForwardRequestInterceptor = requestInterceptor;
     }
 
+    /*
+OncePerRequestFilter入口
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String originUri = extractor.extractUri(request);
@@ -74,6 +77,9 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         String traceId = traceInterceptor.generateTraceId();
         traceInterceptor.onRequestReceived(traceId, method, originHost, originUri, headers);
 
+        /*
+        查询路由映射表 找到对应的映射 （路由解析模块）
+         */
         MappingProperties mapping = mappingsProvider.resolveMapping(originHost, request);
         if (mapping == null) {
             traceInterceptor.onNoMappingFound(traceId, method, originHost, originUri, headers);
@@ -91,15 +97,23 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         addForwardHeaders(request, headers);
 
         RequestData dataToForward = new RequestData(method, originHost, originUri, headers, body, request);
+        /*
+        请求截获器，可以对请求做一些预处理
+         */
         preForwardRequestInterceptor.intercept(dataToForward, mapping);
         if (dataToForward.isNeedRedirect() && !isBlank(dataToForward.getRedirectUrl())) {
             log.debug(String.format("Redirecting to -> %s", dataToForward.getRedirectUrl()));
             response.sendRedirect(dataToForward.getRedirectUrl());
             return;
         }
-
+        /*
+        调用转发器进行转发请求
+         */
         ResponseEntity<byte[]> responseEntity =
                 requestForwarder.forwardHttpRequest(dataToForward, traceId, mapping);
+        /*
+        处理response
+         */
         this.processResponse(response, responseEntity);
     }
 
